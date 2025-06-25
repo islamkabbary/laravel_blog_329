@@ -1,31 +1,43 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get("/", [PageController::class, 'home']);
+Route::get("/about-us", [PageController::class, 'about']);
+Route::get("/contact-us", [PageController::class, 'contact']);
+Route::post("/contact-us", [PageController::class, 'create_new_contect'])->name('create_new_contect');
 
 
-Route::get("/hello", function () {
-    return "hello Laravel";
-});
+
+Route::get("/blog/{id}", [PageController::class, 'showBlog']);
+
+// Route::view("/", "home");
+// Route::view("/about-us", "about");
+
+// Route::get("/hello", function () {
+//     return "hello Laravel";
+// });
 
 // Route::post("/hello-post", function () {
 //     return "hello Laravel";
 // });
 
-Route::get('/product/{id}', function ($id) {
-    return "product " . $id;
-})->where(['id' => '[0-9]+']);
+// Route::get('/product/{id}', function ($id) {
+//     return "product " . $id;
+// })->where(['id' => '[0-9]+']);
 
-Route::get('/product/{category}/{id}', function ($category, $id) {
-    return "product id => " . $id . " category => " . $category;
-})->where(['id' => '[0-9]+', 'category' => '[a-z]+']);
+// Route::get('/product/{category}/{id}', function ($category, $id) {
+//     return "product id => " . $id . " category => " . $category;
+// })->where(['id' => '[0-9]+', 'category' => '[a-z]+']);
 
-Route::get('/user/{name?}', function ($name = "Guest") {
-    return "user_name =>  " . $name;
-})->name('user_name');
+// Route::get('/user/{name?}', function ($name = "Guest") {
+//     return "user_name =>  " . $name;
+// })->name('user_name');
 
 // -----------------------------------------------------------------
 
@@ -78,10 +90,10 @@ Route::get('/user/{name?}', function ($name = "Guest") {
 //     return view("home")->with(['name'=> $name, 'age'=> $age, 'job'=> $job , 'skills' => $skills]);
 // });
 
-Route::get('home', function () {
-    $name = "mostafa";
-    $age = 26;
-    $job = "PHP Developer";
-    $skills = ['html','css','php','laravel'];
-    return view("home", ['name'=> $name, 'age'=> $age, 'job'=> $job , 'skills' => $skills]);
-});
+// Route::get('home', function () {
+//     $name = "mostafa";
+//     $age = 26;
+//     $job = "PHP Developer";
+//     $skills = ['html','css','php','laravel'];
+//     return view("home", ['name'=> $name, 'age'=> $age, 'job'=> $job , 'skills' => $skills]);
+// });
