@@ -1,7 +1,16 @@
 <?php
 
-use App\Http\Controllers\PageController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+
+/*
+// ORM (Object relational Mapping)
+SELECT * FROM posts WHERE id = 1;
+Post::find(1);
+// Eloquent
+// Query Builder
+*/
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -18,6 +27,50 @@ Route::get("/blog/{id}", [PageController::class, 'showBlog']);
 
 // Route::view("/", "home");
 // Route::view("/about-us", "about");
+
+Route::get("/posts", function () {
+    // create
+    // $post = new Post();
+    // $post->title = "first title ".time();
+    // $post->content = "first content";
+    // $post->save();
+
+    // Read
+    // dd(Post::find(3)->is_published);
+    // return Post::findOrFail(1);
+    // return Post::all();
+
+    // update
+    // $post = Post::find(1);
+    // $post->title = "update First Title 1";
+    // $post->content = "update First content 1";
+    // $post->save();
+
+    // delete
+    // $post = Post::find(1);
+    // $post->delete();
+});
+
+Route::get("/posts", function () {
+    // // create
+    // Post::create([
+    //     "title" => "first title Mass Assi 1",
+    //     "content" => "first content Mass Assi 1",
+    // ]);
+
+
+
+    // Query
+    // dd(Post::where('is_published',true)->get());
+    // dd(Post::where('is_published',false)->get());
+    // dd(Post::orderBy('created_at',"desc")->get());
+    // dd(Post::where('is_published',true)->where("created_at",">=",now()->subDays(7))->get());
+    // dd(Post::where('title',"like","%57%")->get());
+    // dd(Post::limit(5)->get());
+    // dd(Post::whereIn('id',[3,4,8])->get());
+    dd(Post::whereNotIn('id',[3,4,8])->first());
+    // dd(Post::first());
+});
 
 // Route::get("/hello", function () {
 //     return "hello Laravel";
