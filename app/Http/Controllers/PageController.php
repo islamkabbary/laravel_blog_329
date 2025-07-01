@@ -2,24 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
     public function home()
     {
-        $posts = [
-            ["title" => "first title", "subtitle" => "first subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"],
-            ["title" => "second title", "subtitle" => "second subtitle"]
-        ];
+        $posts = Post::paginate(5);
         return view("home", ['posts' => $posts]);
     }
     public function about()

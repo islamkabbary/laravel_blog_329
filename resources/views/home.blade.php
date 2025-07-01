@@ -29,10 +29,12 @@
                 {{-- <x-card-post-component title="first title from new component" subtitle="first subtitle from new component"/> --}}
                 @foreach ($posts as $post)
                     <x-card-post-component>
-                        <x-slot name="title">{{ $post['title'] }}</x-slot>
-                        <x-slot name="subtitle">{{ $post['subtitle'] }}</x-slot>
+                        <x-slot name="title">{{ $post->title }}</x-slot>
+                        <x-slot name="subtitle">{{ $post->content }}</x-slot>
+                        <x-slot name="author">{{ $post->user->name }}</x-slot>
                     </x-card-post-component>
                 @endforeach
+                {{ $posts->links() }}
                 <!-- Pager-->
                 <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older
                         Posts →</a></div>

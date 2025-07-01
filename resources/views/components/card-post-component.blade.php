@@ -6,7 +6,7 @@
                         <h3 class="post-subtitle">{{ $subtitle }}</h3>
                     </a>
                     <p class="post-meta">
-                        Posted by
+                        Posted by {{ $author }}
                         <a href="#!">Start Bootstrap</a>
                         on September 24, 2023
                     </p>
