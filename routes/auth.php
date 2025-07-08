@@ -12,9 +12,10 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 
-Route::middleware('guest')->prefix("user")->group(function () {
+Route::middleware('guest')->prefix("admin")->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register')->middleware(IsAdminMiddleware::class);
+        ->name('register');
+        // ->name('register')->middleware(IsAdminMiddleware::class);
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
