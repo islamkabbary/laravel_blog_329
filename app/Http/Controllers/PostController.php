@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StorePostRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $posts = Post::orderBy('id', 'desc')->paginate(10);
+        // $posts = Post::where('user_id',auth()->id())->orderBy('id', 'desc')->paginate(10);
         return view('posts.index', ["posts" => $posts]);
     }
 
@@ -24,6 +28,11 @@ class PostController extends Controller
      */
     public function create()
     {
+        // if(Gate::allows('create-post')){
+        // return view('posts.create');
+        // }
+        // abort(403);
+        $this->authorize("create" , Post::class);
         return view('posts.create');
     }
 
@@ -42,22 +51,23 @@ class PostController extends Controller
             $url = Storage::disk("public")->putFileAs("posts", $image, $fileName);
             $data['image'] = $url;
         }
-        
-        
+
+
         $data['user_id'] = Auth::id();
         Post::create($data);
 
-        return to_route("posts.index")->with("success" , "Post Created Successfully!");
+        return to_route("posts.index")->with("success", "Post Created Successfully!");
     }
     
     /**
      * Display the specified resource.
-     */
-    public function show(string $id)
+    */
+    public function show(Post $post)
     {
-        //
+        $this->authorize("view", $post);
+        return view('posts.show',['post' => $post]);
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -65,7 +75,7 @@ class PostController extends Controller
     {
         //
     }
-    
+
     /**
      * Update the specified resource in storage.
      */
@@ -73,14 +83,23 @@ class PostController extends Controller
     {
         //
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Post $post)
     {
+        // if (Gate::allows("delete-post", $post)) {
+        //     $post->delete();
+        //     // Post::destroy([100,99,98]);
+        //     return to_route("posts.index")->with("success", "Post Deleted Successfully!");
+        // }
+        // abort(403);
+        $this->authorize("delete-post", $post);
+        if ($post->image && Storage::exists($post->image)) {
+            Storage::disk('public')->delete($post->image);
+        }
         $post->delete();
-        // Post::destroy([100,99,98]);
-        return to_route("posts.index")->with("success" , "Post Deleted Successfully!");
+        return to_route("posts.index")->with("success", "Post Deleted Successfully!");
     }
 }
