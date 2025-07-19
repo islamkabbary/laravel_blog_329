@@ -1,11 +1,13 @@
 <?php
 
 use App\Models\Post;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 require __DIR__ . '/auth.php';
 
 Route::get("/", [PageController::class, 'home']);
@@ -31,6 +33,27 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::get("test-posts" , function(){
+    $res = Http::get("https://jsonplaceholder.typicode.com/postss");
+    if($res->successful()){
+        $posts = $res->json();
+        // request success
+    } elseif($res->clientError()){
+
+    } elseif($res->serverError()){
+
+    }
+    return response()->json($posts);
+});
+
+Route::post("add-post" , function(){
+    $res = Http::post("https://jsonplaceholder.typicode.com/posts",[
+        "title" => "first title with api",
+        "content" => "first content with api",
+        "userId" => 10,
+    ]);
+    return $res->json();
+});
 
 /*
 // ORM (Object relational Mapping)

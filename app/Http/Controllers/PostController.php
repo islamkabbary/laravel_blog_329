@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Events\PostCreatedEvent;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StorePostRequest;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostController extends Controller
 {
@@ -18,9 +20,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('id', 'desc')->paginate(10);
-        // $posts = Post::where('user_id',auth()->id())->orderBy('id', 'desc')->paginate(10);
-        return view('posts.index', ["posts" => $posts]);
+        // try {
+            $posts = Post::ordeerBy('id', 'desc')->paginate(10);
+            // $posts = Post::where('user_id',auth()->id())->orderBy('id', 'desc')->paginate(10);
+            return view('posts.index', ["posts" => $posts]);
+        // } catch (\Throwable $th) {
+        //    Log::channel("payment")->error($th->getMessage() . $th->getFile() . $th->getLine());
+        // }
     }
 
     /**
@@ -32,7 +38,7 @@ class PostController extends Controller
         // return view('posts.create');
         // }
         // abort(403);
-        $this->authorize("create" , Post::class);
+        // $this->authorize("create" , Post::class);
         return view('posts.create');
     }
 
@@ -41,7 +47,6 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        dd("store");
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -54,18 +59,18 @@ class PostController extends Controller
 
 
         $data['user_id'] = Auth::id();
-        Post::create($data);
-
+        $post = Post::create($data);
+        event(new PostCreatedEvent($post));
         return to_route("posts.index")->with("success", "Post Created Successfully!");
     }
-    
+
     /**
      * Display the specified resource.
-    */
+     */
     public function show(Post $post)
     {
         $this->authorize("view", $post);
-        return view('posts.show',['post' => $post]);
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
